@@ -15,6 +15,7 @@ const Produtos = () => {
         // catch captura o erro da requisição
         axios.get("http://172.19.0.49/pizzariateste/api/v1/produto")
         .then((response) => {
+            console.log("resposta do servidor:")
             console.log(response.data.data)
             setDados(response.data.data)
         })

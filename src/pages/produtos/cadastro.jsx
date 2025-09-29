@@ -1,28 +1,36 @@
+// Hooks do react - estado dos dados / renderização
 import { useState, useEffect } from "react";
+// Ferramenta de consumo de rotas ou endpoints
 import axios from "axios";
 
 // Formulário simples em JavaScript usando apenas <div>, <input>, useState/useEffect e axios
 const CadastroProduto = () => {
+  // Estado com dados do formulário
   const [form, setForm] = useState({
     nome: "",
     tipo: "",
     precoVenda: "",
     descricao: ""
   });
+  // Estado observa a execução do botão
   const [loading, setLoading] = useState(false);
+  // Estado armazena a mensagem de sucesso ou insucesso do cadastro
   const [msg, setMsg] = useState("");
 
+  // Controla a renderização da página, observando o formulário
+  // Troca vírgula do preço por ponto decimal
   useEffect(() => {
     if (form.precoVenda.includes(",")) {
       setForm((f) => ({ ...f, precoVenda: f.precoVenda.replace(",", ".") }));
     }
-  }, [form.preco]);
-
+  }, [form.precoVenda]);
+  // Método ou componente de definição de dados do formulário
+  // Captura dados do formulário e monta o JSON
   const onChange = (e) => {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
   };
-
+  // Método acionado após cadastro dos dados
   const submit = async () => {
     setMsg("");
     const payload = {
@@ -31,14 +39,15 @@ const CadastroProduto = () => {
       precoVenda: Number(form.precoVenda),
       descricao: form.descricao     
     };
-
+    // Crítica ou verificação do formulário
     if (!payload.nome || !payload.descricao || !payload.tipo || !payload.precoVenda) {
       setMsg("Preencha todos os campos corretamente.");
       return;
     }
-
+    // ativa carregamento da página
     setLoading(true);
     try {
+      // POST - INSERT - cadastra os dados no servidor (banco de dados)
       axios.post("http://172.19.0.49/pizzariateste/api/v1/produto", 
         payload,
         {
@@ -50,7 +59,7 @@ const CadastroProduto = () => {
         }
       )
       .then(response => {
-        console.log(response.data);
+        console.log(response.data.status);
       })
       .catch(error => {
         console.log(error);
